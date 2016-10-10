@@ -8,36 +8,45 @@ import json
 import discid
 import musicbrainzngs as ws
 
-output="NORMAL"
-device=discid.get_default_device()
+# default options
+output = "NORMAL"
+device = discid.get_default_device()
 
+
+# usage function for print help info
 def usage():
-    fname = os.path.basename(sys.argv[0]) 
+    fname = os.path.basename(sys.argv[0])
     print("usage: {0:s} [DEVICE] [OPTION]".format(fname))
     print("[DEVICE]   Example: /dev/cdrom")
     print("-h       print help information and exit")
     print("-j       return results in JSON format")
 
+
+# read the options from sys.argv
 def parseOpts():
     global output, device
-    
+
     for arg in sys.argv:
         if arg != sys.argv[0]:
             if arg == "-h":
                 usage()
                 exit(1)
             elif arg == "-j":
-                output="JSON"
+                output = "JSON"
             else:
-                device=arg
+                device = arg
 
+
+# read properties from the given disc device
 def getDisc(device):
     return discid.read(device=device)
 
+
+# get metadata from musicbrainz api
 def getReleases(disc):
-    ws.set_useragent("musicbrainz_discid","0.2")
+    ws.set_useragent("musicbrainz_discid", "0.2")
     includeVars = ["artists", "recordings", "labels"]
-    return ws.get_releases_by_discid(disc.id,toc=disc.toc_string,cdstubs=False,includes=includeVars)
+    return ws.get_releases_by_discid(disc.id, toc=disc.toc_string, cdstubs=False, includes=includeVars)
 
 # read options, return usage or option variables
 parseOpts()
@@ -70,8 +79,6 @@ else:
         print('{"success":false,"message":"Release not found"}')
     exit(1)
 
-    
-
 if output == "JSON":
     # print JSON
     print(json.dumps(releases))
@@ -90,9 +97,9 @@ else:
         print("  Artist: " + x['artist-credit'][0]['artist']['name'])
         print("  Tracks:")
         for x in x['medium-list']:
-                print("    " + (x['format'] if 'format' in x else "Medium") + " " + str(x['position']) + ":")
-                tnum = 1
-                for x in x['track-list']:
-                        print("      " + "{0:02d} ".format(tnum) + x['recording']['title'])
-                        tnum += 1
-        rnum += 1
+            print("    " + (x['format'] if 'format' in x else "Medium") + " " + str(x['position']) + ":")
+            tnum = 1
+            for x in x['track-list']:
+                print("      " + "{0:02d} ".format(tnum) + x['recording']['title'])
+            tnum += 1
+rnum += 1
