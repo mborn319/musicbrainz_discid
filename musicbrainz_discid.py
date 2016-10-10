@@ -17,9 +17,9 @@ device = discid.get_default_device()
 def usage():
     fname = os.path.basename(sys.argv[0])
     print("usage: {0:s} [DEVICE] [OPTION]".format(fname))
-    print("[DEVICE]   Example: /dev/cdrom")
-    print("-h       print help information and exit")
-    print("-j       return results in JSON format")
+    print("\t [DEVICE]\t Example: /dev/cdrom")
+    print("\t -h\t\t print help information and exit")
+    print("\t -j\t\t return results in JSON format")
 
 
 # read the options from sys.argv
